@@ -1,0 +1,10 @@
+
+cmake_minimum_required(VERSION 3.10)
+project(CPP_GitHub_Actions)
+
+set(CMAKE_CXX_STANDARD 17)
+
+include_directories(include)
+
+add_executable(main src/main.cpp src/functions.cpp)
+add_executable(test tests/test_main.cpp src/functions.cpp)
