@@ -1,0 +1,20 @@
+{
+  "unicast": "127.0.0.1",
+  "logging": {
+    "level": "info"
+  },
+  "applications": [
+    {
+      "name": "Sensor_server"
+    }
+  ],
+  "services": [
+    {
+      "service": "0x1234",
+      "instance": "0x5678",
+      "unreliable": {
+        "port": "30509"
+      }
+    }
+  ]
+}

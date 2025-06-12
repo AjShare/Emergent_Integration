@@ -1,0 +1,20 @@
+{
+  "unicast": "127.0.0.1",
+  "logging": {
+    "level": "info"
+  },
+  "applications": [
+    {
+      "name": "Display_Client"
+    }
+  ],
+  "services": [
+    {
+      "service": "0x1234",
+      "instance": "0x5678",
+      "unreliable": {
+        "port": "30510"
+      }
+    }
+  ]
+}
