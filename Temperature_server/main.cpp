@@ -1,5 +1,6 @@
 #include <vsomeip/vsomeip.hpp>
 #include "../include/temperature_interface_v001.hpp"
+#include "../include/temperature_interface_v002.hpp"
 #include <iostream>
 #include <thread>
 #include <chrono>
@@ -30,9 +31,13 @@ public:
 private:
     void run() {
         while (true) {
+            //v1
             std::vector<vsomeip::byte_t> payload_data = serialization::serializeStruct(temperature_);
+            //v2
+            std::vector<vsomeip::byte_t> payload_data_2 = serialization::serializeStruct(temperature_new);
 
             auto payload = vsomeip::runtime::get()->create_payload();
+            //v1
             payload->set_data(payload_data);
 
             app_->notify(TEMPERATURE_SERVICE_ID, TEMPERATURE_INSTANCE_ID,
@@ -41,12 +46,25 @@ private:
             std::cout << "Server: Sent temperature = " << temperature_.value << "°C" <<" Interface version : " << temperature_.interface_version<< std::endl;
 
             temperature_.value = (temperature_.value + 1) % 40;
+
+            //v2
+            payload->set_data(payload_data_2);
+
+            app_->notify(TEMPERATURE_SERVICE_ID, TEMPERATURE_INSTANCE_ID,
+                         TEMPERATURE_EVENT_ID, payload);
+            std::cout << "Server: Sent temperature = " << temperature_new.value << "°C   Timestamp : " <<temperature_new.timestamp<<" s  Interface version : " << temperature_new.interface_version<< std::endl;
+
+            temperature_new.value = (temperature_.value + 1) % 40;
+            temperature_new.timestamp = temperature_new.timestamp + 2;
+
+
             std::this_thread::sleep_for(std::chrono::seconds(2));
         }
     }
 
     std::shared_ptr<vsomeip::application> app_;
     temperature_interface_v001::Temperature temperature_;
+    temperature_interface_v002::Temperature temperature_new;
 };
 
 int main() {
