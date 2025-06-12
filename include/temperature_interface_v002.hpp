@@ -13,11 +13,10 @@ namespace temperature_interface_v002 {
 struct Temperature {
     uint interface_version;
     double value;           // Temperature value
-    std::string unit;       // Unit: "C", "F", or "K"
+    int timestamp;       // Unit: "C", "F", or "K"
 
     // Constructor
-    Temperature(double val, const std::string& u)
-        : value(val), unit(u) {}
+    Temperature(int val = 0) : interface_version(1), value(val),timestamp(0) {}
 };
 
 } // namespace temperature_interface_v002

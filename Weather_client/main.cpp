@@ -1,17 +1,21 @@
 #include <vsomeip/vsomeip.hpp>
 #include "../include/temperature_interface_v001.hpp"
+#include "../include/temperature_interface_v002.hpp"
 #include "../include/serialization_helpers.hpp"
 #include <iostream>
 
-class WeatherClient {
+class WeatherClient
+{
 public:
     WeatherClient()
         : app_(vsomeip::runtime::get()->create_application("Weather_Client")) {}
 
-    void init() {
+    void init()
+    {
         app_->init();
 
-        app_->register_state_handler([this] (vsomeip::state_type_e state){
+        app_->register_state_handler([this](vsomeip::state_type_e state)
+                                     {
             if (state == vsomeip::state_type_e::ST_REGISTERED) {
                 //Temperature service - Request & subscribe
                 app_->request_service(TEMPERATURE_SERVICE_ID, TEMPERATURE_INSTANCE_ID);
@@ -20,27 +24,45 @@ public:
                 app_->subscribe(TEMPERATURE_SERVICE_ID, TEMPERATURE_INSTANCE_ID,
                                 TEMPERATURE_EVENTGROUP_ID);
 
-            }
-        });
+            } });
 
-        //Temperature data
+        // Temperature data
         app_->register_message_handler(TEMPERATURE_SERVICE_ID, TEMPERATURE_INSTANCE_ID,
                                        TEMPERATURE_EVENT_ID,
-                                       [this](std::shared_ptr<vsomeip::message> msg) {
+                                       [this](std::shared_ptr<vsomeip::message> msg)
+                                       {
                                            auto payload = msg->get_payload();
-                                           //auto data = payload->get_data();
+                                           // auto data = payload->get_data();
                                            auto length = payload->get_length();
-                                           if (length > 0)  {
+                                           if (length > 0)
+                                           {
+                                               temperature_interface_v002::Temperature temperature = serialization::extractAndDeserialize<temperature_interface_v002::Temperature>(payload);
+                                               if (temperature.interface_version == 2)
+                                                {
+                                                   std::cout << "Client: Received temperature = "
+                                                             << temperature.value <<" Timestamp : "<< temperature.timestamp
+                                                             << " Interface version : " << temperature.interface_version << std::endl;
+                                               }
+                                               else
+                                               {
                                                temperature_interface_v001::Temperature temperature = serialization::extractAndDeserialize<temperature_interface_v001::Temperature>(payload);
-                                               std::cout << "Client: Received temperature = "
-                                                         << temperature.value << "°C" <<" Interface version : "<<temperature.interface_version <<std::endl;
+                                                if (temperature.interface_version == 1)
+                                                {
+                                                   std::cout << "Client: Received temperature = "
+                                                             << temperature.value << "°C"
+                                                             << " Interface version : " << temperature.interface_version << std::endl;
+                                               }
+                                               else
+                                               { std::cout << "Unsupported interace version"
+                                                             << " Interface version : " << temperature.interface_version << std::endl;}
+                                              
+                                               }
                                            }
                                        });
-        
-
     }
 
-    void start() {
+    void start()
+    {
         app_->start();
     }
 
@@ -48,7 +70,8 @@ private:
     std::shared_ptr<vsomeip::application> app_;
 };
 
-int main() {
+int main()
+{
     WeatherClient client;
     client.init();
     client.start();
