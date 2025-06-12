@@ -18,12 +18,7 @@ public:
                                     TEMPERATURE_EVENT_ID, {TEMPERATURE_EVENTGROUP_ID}, vsomeip::event_type_e::ET_EVENT);
                 app_->subscribe(TEMPERATURE_SERVICE_ID, TEMPERATURE_INSTANCE_ID,
                                 TEMPERATURE_EVENTGROUP_ID);
-                //sunlight service - Request & subscribe
-                app_->request_service(SUNLIGHT_SERVICE_ID, SUNLIGHT_INSTANCE_ID);
-                app_->request_event(SUNLIGHT_SERVICE_ID, SUNLIGHT_INSTANCE_ID,
-                                    SUNLIGHT_EVENT_ID, {SUNLIGHT_EVENTGROUP_ID}, vsomeip::event_type_e::ET_EVENT);
-                app_->subscribe(SUNLIGHT_SERVICE_ID, SUNLIGHT_INSTANCE_ID,
-                                SUNLIGHT_EVENTGROUP_ID);
+
             }
         });
 
