@@ -1,6 +1,5 @@
 #include <vsomeip/vsomeip.hpp>
 #include "../include/temperature_interface_v001.hpp"
-#include "../include/humidity_interface_v001.hpp"
 #include <iostream>
 
 class WeatherClient {
