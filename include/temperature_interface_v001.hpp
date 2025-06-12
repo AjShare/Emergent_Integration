@@ -6,4 +6,20 @@
 #define TEMPERATURE_EVENTGROUP_ID 0x4466
 #define TEMPERATURE_EVENT_ID 0x3344
 
+
+#include <string>
+
+namespace temperature_interface_v001 {
+
+struct Temperature {
+    int value;           // Temperature value
+    // Constructor
+    Temperature(int val)
+        : value(val){}
+};
+
+} // namespace temperature_interface_v001
+
+
 #endif // TEMPERATURE_INTERFACE_HPP
+

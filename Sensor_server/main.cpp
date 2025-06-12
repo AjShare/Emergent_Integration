@@ -1,5 +1,5 @@
 #include <vsomeip/vsomeip.hpp>
-#include "../include/temperature_interface.hpp"
+#include "../include/temperature_interface_v001.hpp"
 #include <iostream>
 #include <thread>
 #include <chrono>
@@ -30,7 +30,7 @@ private:
     void run() {
         while (true) {
             std::vector<vsomeip::byte_t> payload_data = {
-                static_cast<vsomeip::byte_t>(temperature_)
+                static_cast<vsomeip::byte_t>(temperature_.value)
             };
 
             auto payload = vsomeip::runtime::get()->create_payload();
@@ -39,15 +39,15 @@ private:
             app_->notify(TEMPERATURE_SERVICE_ID, TEMPERATURE_INSTANCE_ID,
                          TEMPERATURE_EVENT_ID, payload);
 
-            std::cout << "Server: Sent temperature = " << temperature_ << "°C" << std::endl;
+            std::cout << "Server: Sent temperature = " << temperature_.value << "°C" << std::endl;
 
-            temperature_ = (temperature_ + 1) % 40;
+            temperature_.value = (temperature_.value + 1) % 40;
             std::this_thread::sleep_for(std::chrono::seconds(2));
         }
     }
 
     std::shared_ptr<vsomeip::application> app_;
-    int temperature_;
+    temperature_interface_v001::Temperature temperature_;
 };
 
 int main() {
