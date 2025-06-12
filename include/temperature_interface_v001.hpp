@@ -12,6 +12,7 @@
 namespace temperature_interface_v001 {
 
 struct Temperature {
+    uint interface_version;
     int value;           // Temperature value
     // Constructor
     Temperature(int val)
