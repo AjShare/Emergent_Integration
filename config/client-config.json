@@ -5,7 +5,7 @@
   },
   "applications": [
     {
-      "name": "Display_Client"
+      "name": "Weather_Client"
     }
   ],
   "services": [

@@ -2,24 +2,27 @@
 #include "../include/temperature_interface_v001.hpp"
 #include <iostream>
 
-class TemperatureClient {
+class WeatherClient {
 public:
-    TemperatureClient()
-        : app_(vsomeip::runtime::get()->create_application("Display_Client")) {}
+    WeatherClient()
+        : app_(vsomeip::runtime::get()->create_application("Weather_Client")) {}
 
     void init() {
         app_->init();
 
         app_->register_state_handler([this] (vsomeip::state_type_e state){
             if (state == vsomeip::state_type_e::ST_REGISTERED) {
+                //Temperature service - Request & subscribe
                 app_->request_service(TEMPERATURE_SERVICE_ID, TEMPERATURE_INSTANCE_ID);
                 app_->request_event(TEMPERATURE_SERVICE_ID, TEMPERATURE_INSTANCE_ID,
                                     TEMPERATURE_EVENT_ID, {TEMPERATURE_EVENTGROUP_ID}, vsomeip::event_type_e::ET_EVENT);
                 app_->subscribe(TEMPERATURE_SERVICE_ID, TEMPERATURE_INSTANCE_ID,
                                 TEMPERATURE_EVENTGROUP_ID);
+
             }
         });
 
+        //Temperature data
         app_->register_message_handler(TEMPERATURE_SERVICE_ID, TEMPERATURE_INSTANCE_ID,
                                        TEMPERATURE_EVENT_ID,
                                        [this](std::shared_ptr<vsomeip::message> msg) {
@@ -32,6 +35,8 @@ public:
                                                          << temperature.value << "°C" << std::endl;
                                            }
                                        });
+        
+
     }
 
     void start() {
@@ -43,7 +48,7 @@ private:
 };
 
 int main() {
-    TemperatureClient client;
+    WeatherClient client;
     client.init();
     client.start();
     return 0;
