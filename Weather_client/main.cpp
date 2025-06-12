@@ -1,5 +1,6 @@
 #include <vsomeip/vsomeip.hpp>
 #include "../include/temperature_interface_v001.hpp"
+#include "../include/serialization_helpers.hpp"
 #include <iostream>
 
 class WeatherClient {
@@ -27,12 +28,12 @@ public:
                                        TEMPERATURE_EVENT_ID,
                                        [this](std::shared_ptr<vsomeip::message> msg) {
                                            auto payload = msg->get_payload();
-                                           auto data = payload->get_data();
+                                           //auto data = payload->get_data();
                                            auto length = payload->get_length();
                                            if (length > 0)  {
-                                               temperature_interface_v001::Temperature temperature = static_cast<int>(data[0]);
+                                               temperature_interface_v001::Temperature temperature = serialization::extractAndDeserialize<temperature_interface_v001::Temperature>(payload);
                                                std::cout << "Client: Received temperature = "
-                                                         << temperature.value << "°C" << std::endl;
+                                                         << temperature.value << "°C" <<" Interface version : "<<temperature.interface_version <<std::endl;
                                            }
                                        });
         

@@ -11,6 +11,7 @@
 namespace temperature_interface_v002 {
 
 struct Temperature {
+    uint interface_version;
     double value;           // Temperature value
     std::string unit;       // Unit: "C", "F", or "K"
 

@@ -3,6 +3,7 @@
 #include <iostream>
 #include <thread>
 #include <chrono>
+#include "../include/serialization_helpers.hpp"
 
 class TemperatureServer {
 public:
@@ -29,9 +30,7 @@ public:
 private:
     void run() {
         while (true) {
-            std::vector<vsomeip::byte_t> payload_data = {
-                static_cast<vsomeip::byte_t>(temperature_.value)
-            };
+            std::vector<vsomeip::byte_t> payload_data = serialization::serializeStruct(temperature_);
 
             auto payload = vsomeip::runtime::get()->create_payload();
             payload->set_data(payload_data);
@@ -39,7 +38,7 @@ private:
             app_->notify(TEMPERATURE_SERVICE_ID, TEMPERATURE_INSTANCE_ID,
                          TEMPERATURE_EVENT_ID, payload);
 
-            std::cout << "Server: Sent temperature = " << temperature_.value << "°C" << std::endl;
+            std::cout << "Server: Sent temperature = " << temperature_.value << "°C" <<" Interface version : " << temperature_.interface_version<< std::endl;
 
             temperature_.value = (temperature_.value + 1) % 40;
             std::this_thread::sleep_for(std::chrono::seconds(2));
