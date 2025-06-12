@@ -1,5 +1,5 @@
 #include <vsomeip/vsomeip.hpp>
-#include "../include/temperature_interface.hpp"
+#include "../include/temperature_interface_v001.hpp"
 #include <iostream>
 
 class TemperatureClient {
@@ -27,9 +27,9 @@ public:
                                            auto data = payload->get_data();
                                            auto length = payload->get_length();
                                            if (length > 0)  {
-                                               int temperature = static_cast<int>(data[0]);
+                                               temperature_interface_v001::Temperature temperature = static_cast<int>(data[0]);
                                                std::cout << "Client: Received temperature = "
-                                                         << temperature << "°C" << std::endl;
+                                                         << temperature.value << "°C" << std::endl;
                                            }
                                        });
     }
