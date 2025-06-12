@@ -16,7 +16,7 @@ struct Temperature {
     int timestamp;       // Unit: "C", "F", or "K"
 
     // Constructor
-    Temperature(int val = 0) : interface_version(1), value(val),timestamp(0) {}
+    Temperature(int val = 0) : interface_version(2), value(val),timestamp(0) {}
 };
 
 } // namespace temperature_interface_v002

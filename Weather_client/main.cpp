@@ -4,6 +4,8 @@
 #include "../include/serialization_helpers.hpp"
 #include <iostream>
 
+int temp_int_version;
+
 class WeatherClient
 {
 public:
@@ -39,12 +41,14 @@ public:
                                                temperature_interface_v002::Temperature temperature = serialization::extractAndDeserialize<temperature_interface_v002::Temperature>(payload);
                                                if (temperature.interface_version == 2)
                                                 {
+                                                    temp_int_version = 2;
                                                    std::cout << "Client: Received temperature = "
                                                              << temperature.value <<" Timestamp : "<< temperature.timestamp
                                                              << " Interface version : " << temperature.interface_version << std::endl;
                                                }
-                                               else
+                                               else if (temp_int_version != 2)
                                                {
+                                               
                                                temperature_interface_v001::Temperature temperature = serialization::extractAndDeserialize<temperature_interface_v001::Temperature>(payload);
                                                 if (temperature.interface_version == 1)
                                                 {
