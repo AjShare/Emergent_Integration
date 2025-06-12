@@ -12,7 +12,7 @@ make
 
 ## Execute:
 
-VSOMEIP_CONFIGURATION=../config/server-config.json ./SensorServer
+VSOMEIP_CONFIGURATION=../config/server-config.json ./TemperatureServer
 
+VSOMEIP_CONFIGURATION=../config/client-config.json ./WeatherClient
 
-VSOMEIP_CONFIGURATION=../config/client-config.json ./DisplayClient
