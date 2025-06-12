@@ -1,25 +1,34 @@
 #include <vsomeip/vsomeip.hpp>
 #include "../include/temperature_interface_v001.hpp"
+#include "../include/humidity_interface_v001.hpp"
 #include <iostream>
 
-class TemperatureClient {
+class WeatherClient {
 public:
-    TemperatureClient()
-        : app_(vsomeip::runtime::get()->create_application("Display_Client")) {}
+    WeatherClient()
+        : app_(vsomeip::runtime::get()->create_application("Weather_Client")) {}
 
     void init() {
         app_->init();
 
         app_->register_state_handler([this] (vsomeip::state_type_e state){
             if (state == vsomeip::state_type_e::ST_REGISTERED) {
+                //Temperature service - Request & subscribe
                 app_->request_service(TEMPERATURE_SERVICE_ID, TEMPERATURE_INSTANCE_ID);
                 app_->request_event(TEMPERATURE_SERVICE_ID, TEMPERATURE_INSTANCE_ID,
                                     TEMPERATURE_EVENT_ID, {TEMPERATURE_EVENTGROUP_ID}, vsomeip::event_type_e::ET_EVENT);
                 app_->subscribe(TEMPERATURE_SERVICE_ID, TEMPERATURE_INSTANCE_ID,
                                 TEMPERATURE_EVENTGROUP_ID);
+                //sunlight service - Request & subscribe
+                app_->request_service(SUNLIGHT_SERVICE_ID, SUNLIGHT_INSTANCE_ID);
+                app_->request_event(SUNLIGHT_SERVICE_ID, SUNLIGHT_INSTANCE_ID,
+                                    SUNLIGHT_EVENT_ID, {SUNLIGHT_EVENTGROUP_ID}, vsomeip::event_type_e::ET_EVENT);
+                app_->subscribe(SUNLIGHT_SERVICE_ID, SUNLIGHT_INSTANCE_ID,
+                                SUNLIGHT_EVENTGROUP_ID);
             }
         });
 
+        //Temperature data
         app_->register_message_handler(TEMPERATURE_SERVICE_ID, TEMPERATURE_INSTANCE_ID,
                                        TEMPERATURE_EVENT_ID,
                                        [this](std::shared_ptr<vsomeip::message> msg) {
@@ -30,6 +39,20 @@ public:
                                                temperature_interface_v001::Temperature temperature = static_cast<int>(data[0]);
                                                std::cout << "Client: Received temperature = "
                                                          << temperature.value << "°C" << std::endl;
+                                           }
+                                       });
+        
+        //Humidity data     
+        app_->register_message_handler(SUNLIGHT_SERVICE_ID, SUNLIGHT_INSTANCE_ID,
+                                       SUNLIGHT_EVENT_ID,
+                                       [this](std::shared_ptr<vsomeip::message> msg) {
+                                           auto payload = msg->get_payload();
+                                           auto data = payload->get_data();
+                                           auto length = payload->get_length();
+                                           if (length > 0)  {
+                                               humidity_interface_v001::Humidity humObj = static_cast<int>(data[0]);
+                                               std::cout << "Client: Received Humidity = "
+                                                         << humObj.value << std::endl;
                                            }
                                        });
     }
@@ -43,7 +66,7 @@ private:
 };
 
 int main() {
-    TemperatureClient client;
+    WeatherClient client;
     client.init();
     client.start();
     return 0;
