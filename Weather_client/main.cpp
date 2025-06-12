@@ -41,19 +41,7 @@ public:
                                            }
                                        });
         
-        //Humidity data     
-        app_->register_message_handler(SUNLIGHT_SERVICE_ID, SUNLIGHT_INSTANCE_ID,
-                                       SUNLIGHT_EVENT_ID,
-                                       [this](std::shared_ptr<vsomeip::message> msg) {
-                                           auto payload = msg->get_payload();
-                                           auto data = payload->get_data();
-                                           auto length = payload->get_length();
-                                           if (length > 0)  {
-                                               humidity_interface_v001::Humidity humObj = static_cast<int>(data[0]);
-                                               std::cout << "Client: Received Humidity = "
-                                                         << humObj.value << std::endl;
-                                           }
-                                       });
+
     }
 
     void start() {
