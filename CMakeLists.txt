@@ -8,13 +8,15 @@ find_package(vsomeip3 REQUIRED)
 
 include_directories(include)
 
-add_executable(main src/main.cpp src/functions.cpp)
-add_executable(test tests/test_main.cpp src/functions.cpp)
+add_executable(main src/main.cpp)
+#add_executable(test tests/test_main.cpp src/functions.cpp)
 
 add_executable(SensorServer Sensor_server/main.cpp)
-add_executable(DisplayClient Display_client/main.cpp)
+add_executable(WeatherClient Weather_client/main.cpp)
+add_executable(SunlightServer Sunlight_server/main.cpp)
 
 target_link_libraries(SensorServer vsomeip3)
-target_link_libraries(DisplayClient vsomeip3)
+target_link_libraries(WeatherClient vsomeip3)
+target_link_libraries(SunlightServer vsomeip3)
 
 

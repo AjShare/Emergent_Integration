@@ -17,4 +17,18 @@
       }
     }
   ]
+  "applications": [
+    {
+      "name": "Sunlight_server"
+    }
+  ],
+  "services": [
+    {
+      "service": "0x4567",
+      "instance": "0x8989",
+      "unreliable": {
+        "port": "30509"
+      }
+    }
+  ]
 }
