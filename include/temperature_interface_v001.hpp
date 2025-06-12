@@ -9,20 +9,17 @@
 
 #include <string>
 
-namespace Weather {
+namespace temperature_interface_v001 {
 
 struct Temperature {
-    double value;           // Temperature value
-    std::string unit;       // Unit: "C", "F", or "K"
-
+    int value;           // Temperature value
     // Constructor
-    Temperature(double val, const std::string& u)
-        : value(val), unit(u) {}
+    Temperature(int val)
+        : value(val){}
 };
 
-} // namespace Weather
-
-#endif // TEMPERATURE_H
+} // namespace temperature_interface_v001
 
 
 #endif // TEMPERATURE_INTERFACE_HPP
+

@@ -21,5 +21,4 @@ struct Temperature {
 
 } // namespace temperature_interface_v002
 
-
 #endif // TEMPERATURE_INTERFACE_HPP
